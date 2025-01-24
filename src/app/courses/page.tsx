@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 
 const courses = [
@@ -26,22 +27,76 @@ const courses = [
     providerLogo: '/images/microsoft-logo.jpg',
     type: 'Professional Certificate',
     image: '/images/microsoft-logo.jpg'
-  },
-  // 可以添加更多课程...
+  }
 ]
 
 export default function CoursesPage() {
+  const [user, setUser] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        console.log('检查认证状态...')
+        // 从 localStorage 获取用户信息
+        const userStr = localStorage.getItem('user')
+        console.log('从localStorage获取到的用户信息:', userStr)
+        
+        if (!userStr) {
+          console.log('未找到用户信息，重定向到主页')
+          window.location.href = '/'
+          return
+        }
+
+        try {
+          const userData = JSON.parse(userStr)
+          console.log('解析到的用户信息:', userData)
+          
+          // 验证用户邮箱
+          if (!userData.email?.endsWith('@link.cuhk.edu.cn')) {
+            console.log('无效的用户邮箱')
+            window.location.href = '/'
+            return
+          }
+          
+          setUser(userData)
+          setLoading(false)
+        } catch (parseError) {
+          console.error('解析用户信息失败:', parseError)
+          window.location.href = '/'
+        }
+      } catch (error) {
+        console.error('认证检查失败:', error)
+        window.location.href = '/'
+      }
+    }
+
+    checkAuth()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-lg">Loading...</div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return null
+  }
+
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-8">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">New Courses</h1>
+            <h1 className="text-2xl font-bold text-gray-900">欢迎回来, {user.name || user.email}</h1>
             <p className="mt-2 text-sm text-gray-500">
-              Explore our latest course offerings focused on in-demand skills.
+              探索我们最新的课程内容，开始您的学习之旅。
             </p>
           </div>
-
+          
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {courses.map((course) => (
               <div
