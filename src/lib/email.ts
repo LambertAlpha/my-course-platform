@@ -1,36 +1,54 @@
-import { Resend } from 'resend'
+import Dm20151123, * as $Dm20151123 from '@alicloud/dm20151123'
+import * as $OpenApi from '@alicloud/openapi-client'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const client = new Dm20151123({
+  accessKeyId: process.env.ALIYUN_ACCESS_KEY_ID,
+  accessKeySecret: process.env.ALIYUN_ACCESS_KEY_SECRET,
+  endpoint: 'dm.aliyuncs.com',
+})
 
+// 生成6位随机验证码
+export function generateVerificationCode(): string {
+  return Math.floor(100000 + Math.random() * 900000).toString()
+}
+
+// 发送验证码邮件
 export const sendVerificationEmail = async (email: string, code: string) => {
   try {
     console.log('Starting email send process...')
     console.log('Target email:', email)
-    console.log('Using API Key:', process.env.RESEND_API_KEY ? 'API key exists' : 'API key is missing')
     
-    if (!process.env.RESEND_API_KEY) {
-      throw new Error('RESEND_API_KEY is not configured')
+    if (!process.env.ALIYUN_ACCESS_KEY_ID || !process.env.ALIYUN_ACCESS_KEY_SECRET) {
+      throw new Error('Aliyun credentials are not configured')
     }
-    
-    const data = await resend.emails.send({
-      from: 'Courses Platform <delivered@resend.dev>',
-      to: email,
-      subject: 'Verify your CUHK(SZ) Learning Platform account',
-      html: `
+
+    const sendSingleMailRequest = new $Dm20151123.SingleSendMailRequest({
+      accountName: process.env.EMAIL_FROM,
+      addressType: 1,
+      replyToAddress: false,
+      toAddress: email,
+      subject: 'CUHK(SZ) 学习平台 - 邮箱验证码',
+      htmlBody: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>Welcome to CUHK(SZ) Learning Platform!</h2>
-          <p>Your verification code is:</p>
-          <div style="background-color: #f4f4f4; padding: 12px; font-size: 24px; font-weight: bold; text-align: center; letter-spacing: 4px; margin: 20px 0;">
+          <h2 style="color: #4F46E5;">CUHK(SZ) 学习平台</h2>
+          <p>您好！</p>
+          <p>您的验证码是：</p>
+          <div style="background-color: #F3F4F6; padding: 20px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; margin: 20px 0;">
             ${code}
           </div>
-          <p>This code will expire in 10 minutes.</p>
-          <p>If you didn't request this code, please ignore this email.</p>
+          <p>验证码有效期为10分钟，请尽快完成验证。</p>
+          <p>如果这不是您的操作，请忽略此邮件。</p>
+          <p style="color: #6B7280; font-size: 12px; margin-top: 30px;">
+            此邮件由系统自动发送，请勿回复。
+          </p>
         </div>
-      `
+      `,
     })
+
+    const result = await client.singleSendMail(sendSingleMailRequest)
     
     console.log('Email sent successfully!')
-    console.log('Resend API Response:', JSON.stringify(data, null, 2))
+    console.log('Aliyun DirectMail Response:', JSON.stringify(result, null, 2))
     return true
   } catch (error) {
     console.error('Failed to send email!')
@@ -40,6 +58,6 @@ export const sendVerificationEmail = async (email: string, code: string) => {
       console.error('Error message:', error.message)
       console.error('Error stack:', error.stack)
     }
-    return false
+    throw error
   }
 }

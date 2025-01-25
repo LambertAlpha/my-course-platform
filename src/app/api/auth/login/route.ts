@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import * as jose from 'jose'
+import bcrypt from 'bcryptjs'
 import type { LoginResponse } from '@/types'
 import type { User } from '@prisma/client'
 
@@ -49,8 +50,18 @@ export async function POST(request: Request) {
     })
 
     // 验证用户存在和密码
-    if (!user || user.password !== password) {
-      console.log('用户验证失败')
+    if (!user) {
+      console.log('用户不存在')
+      return NextResponse.json(
+        { success: false, message: '邮箱或密码错误' },
+        { status: 401 }
+      )
+    }
+
+    // 使用bcrypt验证密码
+    const isValidPassword = await bcrypt.compare(password, user.password)
+    if (!isValidPassword) {
+      console.log('密码验证失败')
       return NextResponse.json(
         { success: false, message: '邮箱或密码错误' },
         { status: 401 }
