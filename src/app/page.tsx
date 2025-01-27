@@ -127,11 +127,6 @@ export default function Home() {
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">CUHK(SZ) Learning Platform</span>
-              <img
-                alt="CUHK(SZ) logo"
-                src="/images/cuhksz-logo.png"
-                className="h-8 w-auto"
-              />
             </a>
           </div>
         </nav>

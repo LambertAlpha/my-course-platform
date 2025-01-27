@@ -1,11 +1,11 @@
 import Dm20151123, * as $Dm20151123 from '@alicloud/dm20151123'
 import * as $OpenApi from '@alicloud/openapi-client'
 
-const client = new Dm20151123({
+const client = new Dm20151123(new $OpenApi.Config({
   accessKeyId: process.env.ALIYUN_ACCESS_KEY_ID,
   accessKeySecret: process.env.ALIYUN_ACCESS_KEY_SECRET,
   endpoint: 'dm.aliyuncs.com',
-})
+}))
 
 // 生成6位随机验证码
 export function generateVerificationCode(): string {
