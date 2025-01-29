@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
 import PricingModal from '../../components/PricingModal'
-import Image from 'next/image'
+import Link from 'next/link'
 
 interface Section {
   id: number;
@@ -72,14 +72,14 @@ const courseDetails: Record<string, CourseDetail> = {
   // 金融系课程
   '1': {
     id: 1,
-    title: 'FIN 2010 - 公司金融',
+    title: 'FIN 2010',
     image: '/images/courses_images/fin2010.jpg',
     instructor: 'Prof. Wang',
     sections: generateExamSections()
   },
   '2': {
     id: 2,
-    title: 'FIN 2020 - 投资学',
+    title: 'FIN 2020',
     image: '/images/courses_images/fin2020.jpg',
     instructor: 'Prof. Li',
     sections: generateExamSections()
@@ -215,14 +215,14 @@ const courseDetails: Record<string, CourseDetail> = {
   },
   '34': {
     id: 34,
-    title: 'MAT2040 - 数学分析II',
+    title: 'MAT2040',
     image: '/images/courses_images/mat2040.jpg',
     instructor: 'Prof. Xie',
     sections: generateExamSections()
   },
   '35': {
     id: 35,
-    title: 'MAT3007 - 数值分析',
+    title: 'MAT3007',
     image: '/images/courses_images/mat3007.jpg',
     instructor: 'Prof. Peng',
     sections: generateExamSections()
@@ -233,7 +233,6 @@ export default function CourseDetailPage() {
   const params = useParams();
   const courseId = params.id as string;
   const course = courseDetails[courseId];
-  const [selectedSection, setSelectedSection] = useState<number | null>(null);
   const [isPricingOpen, setIsPricingOpen] = useState(false);
 
   if (!course) {
@@ -244,12 +243,10 @@ export default function CourseDetailPage() {
     );
   }
 
-  const handleSectionClick = (sectionId: number) => {
-    if (course.sections[sectionId - 1].status === 'locked') {
+  const handleSectionClick = (section: Section) => {
+    if (section.status === 'locked') {
       setIsPricingOpen(true);
-      return;
     }
-    setSelectedSection(sectionId);
   };
 
   const getStatusIcon = (status: Section['status']) => {
@@ -289,42 +286,46 @@ export default function CourseDetailPage() {
           {/* 课程内容列表 */}
           <div className="divide-y divide-gray-200">
             {course.sections.map((section) => (
-              <div
-                key={section.id}
-                onClick={() => handleSectionClick(section.id)}
-                className={`px-6 py-4 flex items-center justify-between hover:bg-gray-50 cursor-pointer ${
-                  section.status === 'locked' ? 'opacity-50' : ''
-                }`}
-              >
-                <div className="flex items-center space-x-4">
-                  <svg className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-900">{section.title}</h3>
-                    <p className="text-sm text-gray-500">{section.duration}</p>
+              section.status === 'locked' ? (
+                <div
+                  key={section.id}
+                  onClick={() => handleSectionClick(section)}
+                  className="px-6 py-4 flex items-center justify-between hover:bg-gray-50 cursor-pointer opacity-50"
+                >
+                  <div className="flex items-center space-x-4">
+                    <svg className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900">{section.title}</h3>
+                      <p className="text-sm text-gray-500">{section.duration}</p>
+                    </div>
                   </div>
+                  {getStatusIcon(section.status)}
                 </div>
-                {getStatusIcon(section.status)}
-              </div>
+              ) : (
+                <Link
+                  key={section.id}
+                  href={`/course/${courseId}/video/${section.id}`}
+                  className="px-6 py-4 flex items-center justify-between hover:bg-gray-50 cursor-pointer"
+                >
+                  <div className="flex items-center space-x-4">
+                    <svg className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900">{section.title}</h3>
+                      <p className="text-sm text-gray-500">{section.duration}</p>
+                    </div>
+                  </div>
+                  {getStatusIcon(section.status)}
+                </Link>
+              )
             ))}
           </div>
         </div>
-
-        {/* 视频播放区域 */}
-        {selectedSection && (
-          <div className="mt-8 bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              {course.sections[selectedSection - 1].title}
-            </h2>
-            <div className="aspect-w-16 aspect-h-9 bg-gray-200 rounded-lg">
-              <div className="flex items-center justify-center">
-                <p className="text-gray-500">视频加载中...</p>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* 付款弹窗 */}
         <PricingModal 

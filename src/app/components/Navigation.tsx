@@ -41,7 +41,7 @@ export default function Navigation() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="搜索课程（如：MAT1001）..."
+              placeholder="搜索课程（如：MAT1002）..."
               className="w-full h-10 pl-4 pr-10 text-sm bg-gray-100 border border-transparent rounded-lg focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
             />
             <button
