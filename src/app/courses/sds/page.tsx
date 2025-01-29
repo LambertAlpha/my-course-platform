@@ -9,44 +9,38 @@ import type { Course } from '../../types/course'
 const sdsCourses: Course[] = [
   {
     id: 16,
-    title: 'STA2001 - 概率论',
+    title: 'STA2001',
     provider: 'SDS',
-    type: '统计系',
     image: '/images/courses_images/sta2001.jpg'
   },
   {
     id: 17,
-    title: 'STA2002 - 数理统计',
+    title: 'STA2002',
     provider: 'SDS',
-    type: '统计系',
     image: '/images/courses_images/sta2002.jpg'
   },
   {
     id: 18,
-    title: 'STA2002H - 数理统计（荣誉）',
+    title: 'STA2002H',
     provider: 'SDS',
-    type: '统计系',
     image: '/images/courses_images/sta2002h.jpg'
   },
   {
     id: 19,
-    title: 'STA4001 - 随机过程',
+    title: 'STA4001',
     provider: 'SDS',
-    type: '统计系',
     image: '/images/courses_images/sta4001.jpg'
   },
   {
     id: 20,
-    title: 'CSC3001 - 机器学习',
+    title: 'CSC3001',
     provider: 'SDS',
-    type: '计算机系',
     image: '/images/courses_images/csc3001.jpg'
   },
   {
     id: 21,
-    title: 'DDA2001 - 数据分析导论',
+    title: 'DDA2001',
     provider: 'SDS',
-    type: '数据科学系',
     image: '/images/courses_images/dda2001.jpg'
   }
 ];
@@ -80,19 +74,9 @@ export default function SDSCoursesPage() {
                 />
               </div>
               <div className="flex flex-1 flex-col space-y-2 p-4">
-                <h3 className="text-sm font-medium text-gray-900">
+                <h3 className="text-base font-medium text-gray-900">
                   {course.title}
                 </h3>
-                <div className="flex items-center space-x-2">
-                  <Image
-                    src="/images/sds-logo.jpg"
-                    alt={course.provider}
-                    width={20}
-                    height={20}
-                    className="h-5 w-5 rounded-full"
-                  />
-                  <span className="text-xs text-gray-500">{course.type}</span>
-                </div>
               </div>
             </Link>
           ))}

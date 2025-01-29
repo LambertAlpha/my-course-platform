@@ -9,37 +9,32 @@ import type { Course } from '../../types/course'
 const sseCourses: Course[] = [
   {
     id: 31,
-    title: 'MAT1002 - 线性代数',
+    title: 'MAT1002',
     provider: 'SSE',
-    type: '数学系',
     image: '/images/courses_images/mat1002.jpg'
   },
   {
     id: 32,
-    title: 'MAT1002B - 线性代数（荣誉）',
+    title: 'MAT1002B',
     provider: 'SSE',
-    type: '数学系',
     image: '/images/courses_images/mat1002b.jpg'
   },
   {
     id: 33,
-    title: 'MAT2041 - 数学分析I',
+    title: 'MAT2041',
     provider: 'SSE',
-    type: '数学系',
     image: '/images/courses_images/mat2041.jpg'
   },
   {
     id: 34,
-    title: 'MAT2040 - 数学分析II',
+    title: 'MAT2040',
     provider: 'SSE',
-    type: '数学系',
     image: '/images/courses_images/mat2040.jpg'
   },
   {
     id: 35,
-    title: 'MAT3007 - 数值分析',
+    title: 'MAT3007',
     provider: 'SSE',
-    type: '数学系',
     image: '/images/courses_images/mat3007.jpg'
   }
 ];
@@ -73,19 +68,9 @@ export default function SSECoursesPage() {
                 />
               </div>
               <div className="flex flex-1 flex-col space-y-2 p-4">
-                <h3 className="text-sm font-medium text-gray-900">
+                <h3 className="text-base font-medium text-gray-900">
                   {course.title}
                 </h3>
-                <div className="flex items-center space-x-2">
-                  <Image
-                    src="/images/sse-logo.jpg"
-                    alt={course.provider}
-                    width={20}
-                    height={20}
-                    className="h-5 w-5 rounded-full"
-                  />
-                  <span className="text-xs text-gray-500">{course.type}</span>
-                </div>
               </div>
             </Link>
           ))}
