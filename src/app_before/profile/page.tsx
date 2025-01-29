@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import RechargeModal from '../components/RechargeModal'
-import { PRESET_AVATARS_LIST } from '../utils/avatarGenerator'
 
 interface UserProfile {
   name: string;
@@ -11,45 +10,28 @@ interface UserProfile {
   balance: number;
   avatar: string;
   purchasedCourses: number;
+  memberSince: string;
 }
 
 export default function ProfilePage() {
+  // 模拟用户数据，实际应该从API获取
   const [profile, setProfile] = useState<UserProfile>({
-    name: "快乐冰激凌",
+    name: "张三",
     email: "zhangsan@example.com",
     balance: 1000,
-    avatar: "/images/avatars/preset-1.jpg",
+    avatar: "/images/avatar-placeholder.jpg",
     purchasedCourses: 3,
+    memberSince: "2024-01"
   });
-
   const [isRechargeModalOpen, setIsRechargeModalOpen] = useState(false);
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [newName, setNewName] = useState(profile.name);
-  const [isSelectingAvatar, setIsSelectingAvatar] = useState(false);
 
   const handleRecharge = (amount: number) => {
+    // 这里应该调用后端 API 进行实际充值
+    // 这里仅作演示，直接更新余额
     setProfile(prev => ({
       ...prev,
       balance: prev.balance + amount
     }));
-  };
-
-  const handleNameSubmit = () => {
-    if (newName.trim()) {
-      setProfile(prev => ({
-        ...prev,
-        name: newName.trim()
-      }));
-      setIsEditingName(false);
-    }
-  };
-
-  const handleAvatarSelect = (avatarPath: string) => {
-    setProfile(prev => ({
-      ...prev,
-      avatar: avatarPath
-    }));
-    setIsSelectingAvatar(false);
   };
 
   return (
@@ -63,92 +45,24 @@ export default function ProfilePage() {
           
           <div className="px-4 py-5 sm:p-6">
             <div className="flex items-center space-x-5">
-              <div className="flex-shrink-0 relative group">
+              <div className="flex-shrink-0">
                 <Image
-                  className="h-20 w-20 rounded-full cursor-pointer"
+                  className="h-20 w-20 rounded-full"
                   src={profile.avatar}
                   alt="用户头像"
                   width={80}
                   height={80}
-                  onClick={() => setIsSelectingAvatar(true)}
                 />
-                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                  <span className="text-white text-sm">更换头像</span>
-                </div>
               </div>
               <div>
-                <div className="flex items-center space-x-2">
-                  {isEditingName ? (
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="text"
-                        value={newName}
-                        onChange={(e) => setNewName(e.target.value)}
-                        className="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                      <button
-                        onClick={handleNameSubmit}
-                        className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-indigo-600 hover:bg-indigo-700"
-                      >
-                        确定
-                      </button>
-                      <button
-                        onClick={() => setIsEditingName(false)}
-                        className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50"
-                      >
-                        取消
-                      </button>
-                    </div>
-                  ) : (
-                    <>
-                      <h3 className="text-xl font-bold text-gray-900">{profile.name}</h3>
-                      <button
-                        onClick={() => setIsEditingName(true)}
-                        className="text-indigo-600 hover:text-indigo-500 text-sm"
-                      >
-                        修改昵称
-                      </button>
-                    </>
-                  )}
-                </div>
+                <h3 className="text-xl font-bold text-gray-900">{profile.name}</h3>
                 <p className="text-sm text-gray-500">{profile.email}</p>
+                <p className="text-sm text-gray-500">注册时间：{profile.memberSince}</p>
               </div>
             </div>
 
-            {/* 头像选择弹窗 */}
-            {isSelectingAvatar && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">选择头像</h3>
-                  <div className="grid grid-cols-5 gap-4">
-                    {PRESET_AVATARS_LIST.map((avatar, index) => (
-                      <div
-                        key={index}
-                        className="cursor-pointer hover:opacity-80"
-                        onClick={() => handleAvatarSelect(avatar)}
-                      >
-                        <Image
-                          src={avatar}
-                          alt={`头像 ${index + 1}`}
-                          width={80}
-                          height={80}
-                          className="rounded-full"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <button
-                    onClick={() => setIsSelectingAvatar(false)}
-                    className="mt-4 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
-                  >
-                    取消
-                  </button>
-                </div>
-              </div>
-            )}
-
             {/* 账户信息卡片 */}
-            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {/* 余额卡片 */}
               <div className="bg-white overflow-hidden shadow rounded-lg">
                 <div className="p-5">
@@ -160,8 +74,8 @@ export default function ProfilePage() {
                     </div>
                     <div className="ml-5 w-0 flex-1">
                       <dl>
-                        <dt className="text-sm font-medium text-gray-500 truncate">分豆豆余额</dt>
-                        <dd className="text-lg font-medium text-gray-900">{profile.balance} 豆</dd>
+                        <dt className="text-sm font-medium text-gray-500 truncate">分多多余额</dt>
+                        <dd className="text-lg font-medium text-gray-900">¥{profile.balance}</dd>
                       </dl>
                     </div>
                   </div>
@@ -172,7 +86,7 @@ export default function ProfilePage() {
                       onClick={() => setIsRechargeModalOpen(true)}
                       className="font-medium text-indigo-600 hover:text-indigo-500"
                     >
-                      充值分豆豆
+                      充值
                     </button>
                   </div>
                 </div>
@@ -216,12 +130,11 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* 充值模态框 */}
+      {/* 添加充值模态框 */}
       <RechargeModal
         isOpen={isRechargeModalOpen}
         onClose={() => setIsRechargeModalOpen(false)}
         onRecharge={handleRecharge}
-        currentBalance={profile.balance}
       />
     </div>
   )

@@ -6,136 +6,102 @@ interface RechargeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onRecharge: (amount: number) => void;
+  currentBalance?: number;
 }
 
-const PRESET_AMOUNTS = [
-  { value: 50, label: '¥50' },
-  { value: 100, label: '¥100' },
-  { value: 200, label: '¥200' },
-  { value: 500, label: '¥500' },
-  { value: 1000, label: '¥1000' },
+const RECHARGE_OPTIONS = [
+  { coins: 24, price: 6, discount: '' },
+  { coins: 128, price: 30, originalPrice: 32, discount: '9.5折' },
+  { coins: 424, price: 98, originalPrice: 106, discount: '9.2折' },
+  { coins: 1280, price: 288, originalPrice: 320, discount: '9.0折' },
+  { coins: 2352, price: 518, originalPrice: 588, discount: '8.8折' },
+  { coins: 3752, price: 798, originalPrice: 938, discount: '8.5折' },
 ];
 
-export default function RechargeModal({ isOpen, onClose, onRecharge }: RechargeModalProps) {
+export default function RechargeModal({ isOpen, onClose, onRecharge, currentBalance = 0 }: RechargeModalProps) {
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
-  const [customAmount, setCustomAmount] = useState<string>('');
-  const [isCustom, setIsCustom] = useState(false);
 
   if (!isOpen) return null;
 
   const handleRecharge = () => {
-    const amount = isCustom ? Number(customAmount) : selectedAmount;
-    if (amount && amount > 0) {
-      onRecharge(amount);
-      onClose();
-    }
-  };
-
-  const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    // 只允许输入数字和小数点
-    if (/^\d*\.?\d*$/.test(value)) {
-      setCustomAmount(value);
+    if (selectedAmount) {
+      // 找到对应的充值选项
+      const selectedOption = RECHARGE_OPTIONS.find(option => option.price === selectedAmount);
+      if (selectedOption) {
+        // 传递分豆豆数量而不是价格
+        onRecharge(selectedOption.coins);
+        onClose();
+      }
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="fixed inset-0 bg-black bg-opacity-50" onClick={onClose}></div>
-      <div className="relative z-50">
-        <div className="relative top-20 mx-auto max-w-xl bg-white rounded-xl shadow-lg p-6">
-          <div className="absolute right-4 top-4">
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-gray-500"
-            >
-              <span className="sr-only">关闭</span>
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg max-w-md w-full p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-xl font-semibold text-gray-900">我的钱包</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
+            <span className="sr-only">关闭</span>
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">账户充值</h2>
+        <div className="flex items-center gap-2 mb-6 text-2xl">
+          <span className="text-yellow-500">●</span>
+          <span className="font-bold">{currentBalance}</span>
+          <span className="text-gray-500 text-base">我的分豆豆</span>
+        </div>
 
-          {/* 预设金额选项 */}
-          <div className="grid grid-cols-3 gap-4 mb-6">
-            {PRESET_AMOUNTS.map((amount) => (
-              <button
-                key={amount.value}
-                onClick={() => {
-                  setSelectedAmount(amount.value);
-                  setIsCustom(false);
-                }}
+        <div className="mb-6">
+          <div className="text-lg font-medium mb-2">充值金额</div>
+          <div className="grid grid-cols-2 gap-4">
+            {RECHARGE_OPTIONS.map((option) => (
+              <div
+                key={option.coins}
+                onClick={() => setSelectedAmount(option.price)}
                 className={`
-                  py-3 px-4 rounded-lg text-center transition-colors
-                  ${!isCustom && selectedAmount === amount.value
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                  }
+                  p-4 rounded-lg border cursor-pointer relative
+                  ${selectedAmount === option.price ? 'border-indigo-600' : 'border-gray-200'}
                 `}
               >
-                {amount.label}
-              </button>
-            ))}
-            <button
-              onClick={() => {
-                setIsCustom(true);
-                setSelectedAmount(null);
-              }}
-              className={`
-                py-3 px-4 rounded-lg text-center transition-colors
-                ${isCustom
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                }
-              `}
-            >
-              自定义
-            </button>
-          </div>
-
-          {/* 自定义金额输入框 */}
-          {isCustom && (
-            <div className="mb-6">
-              <label htmlFor="custom-amount" className="block text-sm font-medium text-gray-700 mb-2">
-                输入充值金额
-              </label>
-              <div className="relative rounded-md shadow-sm">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <span className="text-gray-500 sm:text-sm">¥</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-yellow-500">●</span>
+                  <span className="text-xl font-semibold">{option.coins}</span>
                 </div>
-                <input
-                  type="text"
-                  id="custom-amount"
-                  value={customAmount}
-                  onChange={handleCustomAmountChange}
-                  className="block w-full rounded-md border-0 py-3 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                  placeholder="0.00"
-                />
+                <div className="mt-2">
+                  <span className="text-gray-900">¥{option.price}</span>
+                  {option.originalPrice && (
+                    <span className="text-gray-400 line-through ml-2">¥{option.originalPrice}</span>
+                  )}
+                </div>
+                {option.discount && (
+                  <div className="absolute top-2 right-2 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
+                    {option.discount}
+                  </div>
+                )}
               </div>
-            </div>
-          )}
-
-          {/* 充值按钮 */}
-          <button
-            onClick={handleRecharge}
-            disabled={!selectedAmount && !customAmount}
-            className={`
-              w-full py-3 px-4 rounded-lg text-white text-center transition-colors
-              ${(!selectedAmount && !customAmount)
-                ? 'bg-gray-300 cursor-not-allowed'
-                : 'bg-indigo-600 hover:bg-indigo-700'
-              }
-            `}
-          >
-            确认充值
-          </button>
-
-          <p className="mt-4 text-sm text-gray-500 text-center">
-            充值金额将实时到账，如遇问题请联系客服
-          </p>
+            ))}
+          </div>
         </div>
+
+        <button
+          onClick={handleRecharge}
+          disabled={!selectedAmount}
+          className={`
+            w-full py-3 rounded-md text-white font-semibold
+            ${selectedAmount 
+              ? 'bg-indigo-600 hover:bg-indigo-700' 
+              : 'bg-gray-300 cursor-not-allowed'}
+          `}
+        >
+          确认充值
+        </button>
+
+        <p className="mt-4 text-sm text-gray-500 text-center">
+          充值金额将实时到账，如遇问题请联系客服
+        </p>
       </div>
     </div>
   )

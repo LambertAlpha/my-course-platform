@@ -12,48 +12,42 @@ const sdsCourses: Course[] = [
     title: 'STA2001 - 概率论',
     provider: 'SDS',
     type: '统计系',
-    image: '/images/courses_images/sta2001.jpg',
-    description: '概率论基础理论'
+    image: '/images/courses_images/sta2001.jpg'
   },
   {
     id: 17,
     title: 'STA2002 - 数理统计',
     provider: 'SDS',
     type: '统计系',
-    image: '/images/courses_images/sta2002.jpg',
-    description: '统计学基础理论与方法'
+    image: '/images/courses_images/sta2002.jpg'
   },
   {
     id: 18,
     title: 'STA2002H - 数理统计（荣誉）',
     provider: 'SDS',
     type: '统计系',
-    image: '/images/courses_images/sta2002h.jpg',
-    description: '统计学进阶理论与方法'
+    image: '/images/courses_images/sta2002h.jpg'
   },
   {
     id: 19,
     title: 'STA4001 - 随机过程',
     provider: 'SDS',
     type: '统计系',
-    image: '/images/courses_images/sta4001.jpg',
-    description: '随机过程理论与应用'
+    image: '/images/courses_images/sta4001.jpg'
   },
   {
     id: 20,
     title: 'CSC3001 - 机器学习',
     provider: 'SDS',
     type: '计算机系',
-    image: '/images/courses_images/csc3001.jpg',
-    description: '机器学习基础理论与应用'
+    image: '/images/courses_images/csc3001.jpg'
   },
   {
     id: 21,
     title: 'DDA2001 - 数据分析导论',
     provider: 'SDS',
     type: '数据科学系',
-    image: '/images/courses_images/dda2001.jpg',
-    description: '数据分析基础方法与实践'
+    image: '/images/courses_images/dda2001.jpg'
   }
 ];
 
@@ -63,9 +57,8 @@ export default function SDSCoursesPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            数据学院课程
-          </h1>
-          <p className="mt-4 text-lg text-gray-500">
+            数据学院课程</h1>
+          <p className="mt-2 text-sm text-gray-500">
             探索数据科学与统计的前沿课程
           </p>
         </div>
@@ -90,13 +83,10 @@ export default function SDSCoursesPage() {
                 <h3 className="text-sm font-medium text-gray-900">
                   {course.title}
                 </h3>
-                <p className="text-sm text-gray-500">
-                  {course.description}
-                </p>
                 <div className="flex items-center space-x-2">
                   <Image
                     src="/images/sds-logo.jpg"
-                    alt={course.provider} 
+                    alt={course.provider}
                     width={20}
                     height={20}
                     className="h-5 w-5 rounded-full"

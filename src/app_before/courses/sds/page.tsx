@@ -5,59 +5,73 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Course } from '../../types/course'
 
-// 理工学院课程数据
-const sseCourses: Course[] = [
+// 数据学院课程数据
+const sdsCourses: Course[] = [
   {
-    id: 31,
-    title: 'MAT1002 - 线性代数',
-    provider: 'SSE',
-    type: '数学系',
-    image: '/images/courses_images/mat1002.jpg'
+    id: 16,
+    title: 'STA2001 - 概率论',
+    provider: 'SDS',
+    type: '统计系',
+    image: '/images/courses_images/sta2001.jpg',
+    description: '概率论基础理论'
   },
   {
-    id: 32,
-    title: 'MAT1002B - 线性代数（荣誉）',
-    provider: 'SSE',
-    type: '数学系',
-    image: '/images/courses_images/mat1002b.jpg'
+    id: 17,
+    title: 'STA2002 - 数理统计',
+    provider: 'SDS',
+    type: '统计系',
+    image: '/images/courses_images/sta2002.jpg',
+    description: '统计学基础理论与方法'
   },
   {
-    id: 33,
-    title: 'MAT2041 - 数学分析I',
-    provider: 'SSE',
-    type: '数学系',
-    image: '/images/courses_images/mat2041.jpg'
+    id: 18,
+    title: 'STA2002H - 数理统计（荣誉）',
+    provider: 'SDS',
+    type: '统计系',
+    image: '/images/courses_images/sta2002h.jpg',
+    description: '统计学进阶理论与方法'
   },
   {
-    id: 34,
-    title: 'MAT2040 - 数学分析II',
-    provider: 'SSE',
-    type: '数学系',
-    image: '/images/courses_images/mat2040.jpg'
+    id: 19,
+    title: 'STA4001 - 随机过程',
+    provider: 'SDS',
+    type: '统计系',
+    image: '/images/courses_images/sta4001.jpg',
+    description: '随机过程理论与应用'
   },
   {
-    id: 35,
-    title: 'MAT3007 - 数值分析',
-    provider: 'SSE',
-    type: '数学系',
-    image: '/images/courses_images/mat3007.jpg'
+    id: 20,
+    title: 'CSC3001 - 机器学习',
+    provider: 'SDS',
+    type: '计算机系',
+    image: '/images/courses_images/csc3001.jpg',
+    description: '机器学习基础理论与应用'
+  },
+  {
+    id: 21,
+    title: 'DDA2001 - 数据分析导论',
+    provider: 'SDS',
+    type: '数据科学系',
+    image: '/images/courses_images/dda2001.jpg',
+    description: '数据分析基础方法与实践'
   }
 ];
 
-export default function SSECoursesPage() {
+export default function SDSCoursesPage() {
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            理工学院课程</h1>
-          <p className="mt-2 text-sm text-gray-500">
-            探索数学、物理等基础理工课程
+            数据学院课程
+          </h1>
+          <p className="mt-4 text-lg text-gray-500">
+            探索数据科学与统计的前沿课程
           </p>
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {sseCourses.map((course) => (
+          {sdsCourses.map((course) => (
             <Link
               key={course.id}
               href={`/course/${course.id}`}
@@ -76,10 +90,13 @@ export default function SSECoursesPage() {
                 <h3 className="text-sm font-medium text-gray-900">
                   {course.title}
                 </h3>
+                <p className="text-sm text-gray-500">
+                  {course.description}
+                </p>
                 <div className="flex items-center space-x-2">
                   <Image
-                    src="/images/sse-logo.jpg"
-                    alt={course.provider}
+                    src="/images/sds-logo.jpg"
+                    alt={course.provider} 
                     width={20}
                     height={20}
                     className="h-5 w-5 rounded-full"

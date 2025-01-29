@@ -135,13 +135,8 @@ export default function Home() {
       <div className="relative isolate px-6 pt-14 lg:px-8">
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
           <div className="text-center">
-            <h1 className="text-center tracking-tight text-gray-900">
-              <div className="text-6xl font-bold mb-4">
-                Welcome to Unicourse
-              </div>
-              <div className="text-4xl font-semibold">
-                CUHK(SZ) Learning Platform
-              </div>
+            <h1 className="text-balance text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
+              Welcome to CUHK(SZ) Learning Platform
             </h1>
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
               {error && (
@@ -198,12 +193,12 @@ export default function Home() {
               </form>
 
               <p className="mt-10 text-center text-sm text-gray-500">
-                Don't have an account?{' '}
+                New student?{' '}
                 <Link 
                   href="/register"
                   className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
                 >
-                  Register with CUHK(SZ) email
+                  Register with your CUHK(SZ) email
                 </Link>
               </p>
             </div>

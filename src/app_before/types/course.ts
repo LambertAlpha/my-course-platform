@@ -4,4 +4,5 @@ export interface Course {
     provider: string;
     type: string;
     image: string;
+    description: string;
   } 
